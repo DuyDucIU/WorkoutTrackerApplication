@@ -29,15 +29,17 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String register(RegisterRequest registerRequest) {
 
-        if (userRepo.existsByEmail(registerRequest.getEmail()))
+        if (userRepo.existsByUsername(registerRequest.getUsername()))
             throw new ApiException("User existed with email: " + registerRequest.getEmail());
 
-        User user = new User();
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setFullName(registerRequest.getFullName());
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
+        User user = User.builder()
+                .username(registerRequest.getUsername())
+                .email(registerRequest.getEmail())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .fullName(registerRequest.getFullName())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
 
         userRepo.save(user);
 
@@ -47,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String login(LoginRequest loginRequest) {
         Authentication authenticatedUser = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginRequest.getEmail(),
+                loginRequest.getUsername(),
                 loginRequest.getPassword()
         ));
 

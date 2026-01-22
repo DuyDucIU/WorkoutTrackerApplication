@@ -20,9 +20,12 @@ public class User {
     private Integer id;
 
     @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password_hash", nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
@@ -33,7 +36,8 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Builder
-    public User(String email, String password, String fullName, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(String username, String email, String password, String fullName, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.fullName = fullName;
