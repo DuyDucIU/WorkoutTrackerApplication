@@ -1,5 +1,6 @@
 package com.duyduc.workout_tracker.auth.controller;
 
+import com.duyduc.workout_tracker.auth.dto.LoginRequest;
 import com.duyduc.workout_tracker.auth.dto.RegisterRequest;
 import com.duyduc.workout_tracker.auth.service.AuthService;
 import lombok.AllArgsConstructor;
@@ -21,5 +22,11 @@ public class AuthController {
     public ResponseEntity<String> registerUser(@RequestBody RegisterRequest registerRequest) {
         String response = authService.register(registerRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+        String response = authService.login(loginRequest);
+        return ResponseEntity.ok(response);
     }
 }
