@@ -19,14 +19,20 @@ public class WorkoutPlanController {
 
     @PostMapping
     public ResponseEntity<WorkoutPlanResponse> createWorkoutPlan(@RequestBody WorkoutPlanRequest req) {
-        WorkoutPlanResponse response = workoutPlanService.createWorkoutPlan(req, 1);
+        WorkoutPlanResponse response = workoutPlanService.createWorkoutPlan(req, 2);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<WorkoutPlanResponse>> getWorkoutPlans() {
-        List<WorkoutPlanResponse> responses = workoutPlanService.getWorkoutPlans(1);
+        List<WorkoutPlanResponse> responses = workoutPlanService.getWorkoutPlans(2);
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<WorkoutPlanResponse> getWorkoutPlanById(@PathVariable("id") Integer id) {
+        WorkoutPlanResponse responses = workoutPlanService.getWorkoutPlanById(id, 2);
         return ResponseEntity.ok(responses);
     }
 }

@@ -61,4 +61,17 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
         return response;
     }
+
+    @Override
+    public WorkoutPlanResponse getWorkoutPlanById(Integer id, Integer userId) {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        WorkoutPlan workoutPlan = workoutPlanRepo.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workout not found with id: " + id));
+
+        WorkoutPlanResponse response = workoutPlanMapper.toWorkoutPlanResponse(workoutPlan);
+
+        return response;
+    }
 }
