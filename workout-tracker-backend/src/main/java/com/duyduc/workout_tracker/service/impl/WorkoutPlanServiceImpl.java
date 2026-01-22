@@ -94,4 +94,14 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
         return response;
     }
+
+    @Transactional
+    @Override
+    public void deleteWorkoutPlanById(Integer id, Integer userId) {
+
+        WorkoutPlan workoutPlan = workoutPlanRepo.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workout not found with id: " + id));
+
+        workoutPlanRepo.delete(workoutPlan);
+    }
 }
