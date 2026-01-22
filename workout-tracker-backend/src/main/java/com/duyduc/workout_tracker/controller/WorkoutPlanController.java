@@ -6,10 +6,9 @@ import com.duyduc.workout_tracker.service.WorkoutPlanService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -20,8 +19,14 @@ public class WorkoutPlanController {
 
     @PostMapping
     public ResponseEntity<WorkoutPlanResponse> createWorkoutPlan(@RequestBody WorkoutPlanRequest req) {
-        WorkoutPlanResponse response = workoutPlanService.createWorkoutPlan(req, 2);
+        WorkoutPlanResponse response = workoutPlanService.createWorkoutPlan(req, 1);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<WorkoutPlanResponse>> getWorkoutPlans() {
+        List<WorkoutPlanResponse> responses = workoutPlanService.getWorkoutPlans(1);
+        return ResponseEntity.ok(responses);
     }
 }

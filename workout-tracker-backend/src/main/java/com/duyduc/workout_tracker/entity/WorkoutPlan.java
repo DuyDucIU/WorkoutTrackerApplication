@@ -37,8 +37,9 @@ public class WorkoutPlan {
     private User user;
 
     @Builder
-    public WorkoutPlan(String name, String description) {
+    public WorkoutPlan(String name, String description, User user) {
         this.name = name;
         this.description = description;
+        this.user = user;
     }
 }
