@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -27,10 +27,10 @@ public class WorkoutPlan {
     private String description;
 
     @CreationTimestamp
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
