@@ -49,4 +49,10 @@ public class WorkoutPlanController {
         workoutPlanService.deleteWorkoutPlanById(id, 2);
         return ResponseEntity.ok("Workout plan deleted !");
     }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteAllWorkoutPlans() {
+        workoutPlanService.deleteAllWorkoutPlans(2);
+        return ResponseEntity.ok("All workout plans deleted !");
+    }
 }

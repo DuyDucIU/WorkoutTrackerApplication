@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface WorkoutPlanRepo extends JpaRepository<WorkoutPlan, Integer> {
     List<WorkoutPlan> findByUserId(Integer userId);
     Optional<WorkoutPlan> findByIdAndUserId(Integer id, Integer userId);
+    void deleteByUserId(Integer userId);
 }

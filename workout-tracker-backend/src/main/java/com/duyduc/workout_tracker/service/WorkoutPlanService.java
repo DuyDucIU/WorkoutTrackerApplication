@@ -11,4 +11,5 @@ public interface WorkoutPlanService {
     WorkoutPlanResponse getWorkoutPlanById(Integer id, Integer userId);
     WorkoutPlanResponse updateWorkoutPlanById(WorkoutPlanRequest request, Integer id, Integer userId);
     void deleteWorkoutPlanById(Integer id, Integer userId);
+    void deleteAllWorkoutPlans(Integer userId);
 }

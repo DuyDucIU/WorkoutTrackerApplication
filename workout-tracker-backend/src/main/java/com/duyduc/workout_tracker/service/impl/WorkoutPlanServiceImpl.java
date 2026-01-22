@@ -104,4 +104,10 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
         workoutPlanRepo.delete(workoutPlan);
     }
+
+    @Transactional
+    @Override
+    public void deleteAllWorkoutPlans(Integer userId) {
+        workoutPlanRepo.deleteByUserId(userId);
+    }
 }
