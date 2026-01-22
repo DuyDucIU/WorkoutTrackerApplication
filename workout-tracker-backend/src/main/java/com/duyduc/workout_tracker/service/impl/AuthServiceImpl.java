@@ -1,10 +1,10 @@
-package com.duyduc.workout_tracker.auth.service.impl;
+package com.duyduc.workout_tracker.service.impl;
 
-import com.duyduc.workout_tracker.auth.dto.LoginRequest;
-import com.duyduc.workout_tracker.auth.dto.RegisterRequest;
-import com.duyduc.workout_tracker.auth.entity.User;
-import com.duyduc.workout_tracker.auth.repository.UserRepo;
-import com.duyduc.workout_tracker.auth.service.AuthService;
+import com.duyduc.workout_tracker.dto.request.LoginRequest;
+import com.duyduc.workout_tracker.dto.request.RegisterRequest;
+import com.duyduc.workout_tracker.entity.User;
+import com.duyduc.workout_tracker.repository.UserRepo;
+import com.duyduc.workout_tracker.service.AuthService;
 import com.duyduc.workout_tracker.exception.ApiException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;

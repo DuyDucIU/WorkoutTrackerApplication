@@ -1,6 +1,6 @@
-package com.duyduc.workout_tracker.auth.repository;
+package com.duyduc.workout_tracker.repository;
 
-import com.duyduc.workout_tracker.auth.entity.User;
+import com.duyduc.workout_tracker.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

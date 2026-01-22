@@ -1,4 +1,4 @@
-package com.duyduc.workout_tracker.auth.entity;
+package com.duyduc.workout_tracker.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;

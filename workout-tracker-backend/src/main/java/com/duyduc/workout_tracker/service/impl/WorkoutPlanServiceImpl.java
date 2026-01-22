@@ -1,7 +1,7 @@
 package com.duyduc.workout_tracker.service.impl;
 
-import com.duyduc.workout_tracker.auth.entity.User;
-import com.duyduc.workout_tracker.auth.repository.UserRepo;
+import com.duyduc.workout_tracker.entity.User;
+import com.duyduc.workout_tracker.repository.UserRepo;
 import com.duyduc.workout_tracker.dto.request.WorkoutPlanRequest;
 import com.duyduc.workout_tracker.dto.response.WorkoutPlanResponse;
 import com.duyduc.workout_tracker.entity.WorkoutPlan;
@@ -38,20 +38,13 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
         WorkoutPlan savedWorkout = workoutPlanRepo.save(workoutPlan);
 
-        WorkoutPlanResponse response = WorkoutPlanResponse.builder()
-                .id(savedWorkout.getId())
-                .name(savedWorkout.getName())
-                .description(savedWorkout.getDescription())
-                .createdAt(savedWorkout.getCreatedAt())
-                .build();
+        WorkoutPlanResponse response = workoutPlanMapper.toWorkoutPlanResponse(savedWorkout);
 
         return response;
     }
 
     @Override
     public List<WorkoutPlanResponse> getWorkoutPlans(Integer userId) {
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
         List<WorkoutPlan> workoutPlans = workoutPlanRepo.findByUserId(userId);
 
@@ -64,8 +57,6 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
     @Override
     public WorkoutPlanResponse getWorkoutPlanById(Integer id, Integer userId) {
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
         WorkoutPlan workoutPlan = workoutPlanRepo.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Workout not found with id: " + id));

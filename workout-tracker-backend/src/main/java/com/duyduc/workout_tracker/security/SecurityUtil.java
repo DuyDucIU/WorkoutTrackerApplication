@@ -1,4 +1,4 @@
-package com.duyduc.workout_tracker.util;
+package com.duyduc.workout_tracker.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

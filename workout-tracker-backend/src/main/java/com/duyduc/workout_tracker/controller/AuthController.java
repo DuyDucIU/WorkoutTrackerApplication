@@ -1,8 +1,8 @@
-package com.duyduc.workout_tracker.auth.controller;
+package com.duyduc.workout_tracker.controller;
 
-import com.duyduc.workout_tracker.auth.dto.LoginRequest;
-import com.duyduc.workout_tracker.auth.dto.RegisterRequest;
-import com.duyduc.workout_tracker.auth.service.AuthService;
+import com.duyduc.workout_tracker.dto.request.LoginRequest;
+import com.duyduc.workout_tracker.dto.request.RegisterRequest;
+import com.duyduc.workout_tracker.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.duyduc.workout_tracker.auth.dto;
+package com.duyduc.workout_tracker.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,11 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+@AllArgsConstructor
+public class LoginRequest {
     private String username;
-    private String email;
     private String password;
-    private String fullName;
 }

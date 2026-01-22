@@ -1,7 +1,7 @@
-package com.duyduc.workout_tracker.auth.service;
+package com.duyduc.workout_tracker.security;
 
-import com.duyduc.workout_tracker.auth.entity.User;
-import com.duyduc.workout_tracker.auth.repository.UserRepo;
+import com.duyduc.workout_tracker.entity.User;
+import com.duyduc.workout_tracker.repository.UserRepo;
 import com.duyduc.workout_tracker.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
