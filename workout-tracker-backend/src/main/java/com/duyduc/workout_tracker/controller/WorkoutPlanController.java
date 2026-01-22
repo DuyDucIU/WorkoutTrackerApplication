@@ -35,4 +35,12 @@ public class WorkoutPlanController {
         WorkoutPlanResponse responses = workoutPlanService.getWorkoutPlanById(id, 2);
         return ResponseEntity.ok(responses);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<WorkoutPlanResponse> updateWorkoutPlanById(@PathVariable("id") Integer id,
+                                                                     @RequestBody WorkoutPlanRequest request ) {
+        WorkoutPlanResponse response = workoutPlanService.updateWorkoutPlanById(request, id, 2);
+
+        return ResponseEntity.ok(response);
+    }
 }
