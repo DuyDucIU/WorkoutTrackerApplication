@@ -24,14 +24,14 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false)
+    private String fullName;
+
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false)
-    private String fullName;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -40,10 +40,10 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Builder
-    public User(String username, String email, String password, String fullName) {
+    public User(String username, String fullName, String email, String password) {
         this.username = username;
+        this.fullName = fullName;
         this.email = email;
         this.password = password;
-        this.fullName = fullName;
     }
 }
