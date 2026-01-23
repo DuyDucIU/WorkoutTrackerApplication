@@ -2,8 +2,10 @@ package com.duyduc.workout_tracker.service.impl;
 
 import com.duyduc.workout_tracker.dto.request.LoginRequest;
 import com.duyduc.workout_tracker.dto.request.RegisterRequest;
+import com.duyduc.workout_tracker.dto.response.AuthResponse;
 import com.duyduc.workout_tracker.entity.User;
 import com.duyduc.workout_tracker.repository.UserRepo;
+import com.duyduc.workout_tracker.security.JwtUtils;
 import com.duyduc.workout_tracker.service.AuthService;
 import com.duyduc.workout_tracker.exception.ApiException;
 import jakarta.transaction.Transactional;
@@ -22,6 +24,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
     private UserRepo userRepo;
 
     @Transactional
@@ -44,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String login(LoginRequest loginRequest) {
+    public AuthResponse login(LoginRequest loginRequest) {
         Authentication authenticatedUser = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(),
                 loginRequest.getPassword()
@@ -52,6 +55,10 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 
-        return "Login success fully!";
+        String token = jwtUtils.generateToken(authenticatedUser);
+
+        AuthResponse response = new AuthResponse(token, true);
+
+        return response;
     }
 }

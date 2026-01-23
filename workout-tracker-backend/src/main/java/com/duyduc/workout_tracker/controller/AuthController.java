@@ -2,6 +2,7 @@ package com.duyduc.workout_tracker.controller;
 
 import com.duyduc.workout_tracker.dto.request.LoginRequest;
 import com.duyduc.workout_tracker.dto.request.RegisterRequest;
+import com.duyduc.workout_tracker.dto.response.AuthResponse;
 import com.duyduc.workout_tracker.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        String response = authService.login(loginRequest);
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
+        AuthResponse response = authService.login(loginRequest);
         return ResponseEntity.ok(response);
     }
 }
