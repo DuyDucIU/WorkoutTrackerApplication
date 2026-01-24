@@ -7,10 +7,12 @@ import com.duyduc.workout_tracker.entity.User;
 import com.duyduc.workout_tracker.repository.UserRepo;
 import com.duyduc.workout_tracker.security.JwtUtils;
 import com.duyduc.workout_tracker.service.AuthService;
+import com.duyduc.workout_tracker.exception.ResourceNotFoundException;
 import com.duyduc.workout_tracker.exception.UserAlreadyExistsException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Get user to include userId in JWT
         User user = userRepo.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new UserAlreadyExistsException("User not found"));
+                .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
 
         String token = jwtUtils.generateToken(authenticatedUser, user.getId());
 

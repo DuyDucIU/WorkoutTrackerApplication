@@ -26,7 +26,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         errorResponse.put("timestamp", LocalDateTime.now().toString());
         errorResponse.put("status", HttpStatus.UNAUTHORIZED.value());
         errorResponse.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-        errorResponse.put("message", "Authentication required. Please provide a valid token.");
+        errorResponse.put("message", "Authentication required.");
         errorResponse.put("path", request.getRequestURI());
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

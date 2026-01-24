@@ -2,7 +2,6 @@ package com.duyduc.workout_tracker.dto.response;
 
 import lombok.*;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,4 +14,5 @@ public class WorkoutPlanResponse {
     private String name;
     private String description;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
