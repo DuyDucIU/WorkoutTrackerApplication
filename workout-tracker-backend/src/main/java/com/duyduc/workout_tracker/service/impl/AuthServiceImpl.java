@@ -7,7 +7,7 @@ import com.duyduc.workout_tracker.entity.User;
 import com.duyduc.workout_tracker.repository.UserRepo;
 import com.duyduc.workout_tracker.security.JwtUtils;
 import com.duyduc.workout_tracker.service.AuthService;
-import com.duyduc.workout_tracker.exception.ApiException;
+import com.duyduc.workout_tracker.exception.UserAlreadyExistsException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 @AllArgsConstructor
 @Service
@@ -32,7 +31,10 @@ public class AuthServiceImpl implements AuthService {
     public String register(RegisterRequest registerRequest) {
 
         if (userRepo.existsByUsername(registerRequest.getUsername()))
-            throw new ApiException("User existed with email: " + registerRequest.getEmail());
+            throw new UserAlreadyExistsException("User already exists with username: " + registerRequest.getUsername());
+
+        if (userRepo.existsByEmail(registerRequest.getEmail()))
+            throw new UserAlreadyExistsException("User already exists with email: " + registerRequest.getEmail());
 
         User user = User.builder()
                 .username(registerRequest.getUsername())
@@ -50,8 +52,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse login(LoginRequest loginRequest) {
         Authentication authenticatedUser = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(),
-                loginRequest.getPassword()
-        ));
+                loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 

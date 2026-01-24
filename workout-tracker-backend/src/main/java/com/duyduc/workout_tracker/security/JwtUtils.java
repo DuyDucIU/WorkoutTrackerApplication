@@ -1,5 +1,6 @@
 package com.duyduc.workout_tracker.security;
 
+import com.duyduc.workout_tracker.exception.JwtTokenException;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -45,27 +46,31 @@ public class JwtUtils {
             jwsObject.sign(new MACSigner(jwtSecret.getBytes()));
             return jwsObject.serialize();
         } catch (JOSEException e) {
-            throw new RuntimeException(e);
+            throw new JwtTokenException("Failed to generate JWT token", e);
         }
     }
 
-    public boolean validateToken(String token) throws JOSEException, ParseException {
-        JWSVerifier verifier = new MACVerifier(jwtSecret.getBytes());
-
-        SignedJWT signedJWT = SignedJWT.parse(token);
-
-        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-
-        return signedJWT.verify(verifier) && expiryTime.after(new Date());
+    public boolean validateToken(String token) {
+        try {
+            JWSVerifier verifier = new MACVerifier(jwtSecret.getBytes());
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            return signedJWT.verify(verifier) && expiryTime.after(new Date());
+        } catch (JOSEException | ParseException e) {
+            throw new JwtTokenException("Failed to validate JWT token", e);
+        }
     }
 
-    public String getUsername(String token) throws ParseException, JOSEException {
-        if (!validateToken(token)) {
-            throw new JOSEException("Invalid JWT token");
+    public String getUsername(String token) {
+        try {
+            if (!validateToken(token)) {
+                throw new JwtTokenException("Invalid or expired JWT token");
+            }
+            SignedJWT jwt = SignedJWT.parse(token);
+            return jwt.getJWTClaimsSet().getSubject();
+        } catch (ParseException e) {
+            throw new JwtTokenException("Failed to parse JWT token", e);
         }
-
-        SignedJWT jwt = SignedJWT.parse(token);
-        return jwt.getJWTClaimsSet().getSubject();
     }
 
     public String getToken(HttpServletRequest request) {

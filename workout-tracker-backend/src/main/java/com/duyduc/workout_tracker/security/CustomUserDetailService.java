@@ -15,8 +15,8 @@ import java.util.List;
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 
-    private UserRepo userRepo;
-
+    private final UserRepo userRepo;
+    
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepo.findByUsername(username)
