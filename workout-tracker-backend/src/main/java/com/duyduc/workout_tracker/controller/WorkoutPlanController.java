@@ -2,10 +2,12 @@ package com.duyduc.workout_tracker.controller;
 
 import com.duyduc.workout_tracker.dto.request.WorkoutPlanRequest;
 import com.duyduc.workout_tracker.dto.response.WorkoutPlanResponse;
+import com.duyduc.workout_tracker.security.UserPrincipal;
 import com.duyduc.workout_tracker.service.WorkoutPlanService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,41 +20,49 @@ public class WorkoutPlanController {
     private final WorkoutPlanService workoutPlanService;
 
     @PostMapping
-    public ResponseEntity<WorkoutPlanResponse> createWorkoutPlan(@RequestBody WorkoutPlanRequest req) {
-        WorkoutPlanResponse response = workoutPlanService.createWorkoutPlan(req, 2);
-
+    public ResponseEntity<WorkoutPlanResponse> createWorkoutPlan(
+            @RequestBody WorkoutPlanRequest req,
+            @AuthenticationPrincipal UserPrincipal user) {
+        WorkoutPlanResponse response = workoutPlanService.createWorkoutPlan(req, user.getUserId());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<WorkoutPlanResponse>> getWorkoutPlans() {
-        List<WorkoutPlanResponse> responses = workoutPlanService.getWorkoutPlans(2);
+    public ResponseEntity<List<WorkoutPlanResponse>> getWorkoutPlans(
+            @AuthenticationPrincipal UserPrincipal user) {
+        List<WorkoutPlanResponse> responses = workoutPlanService.getWorkoutPlans(user.getUserId());
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WorkoutPlanResponse> getWorkoutPlanById(@PathVariable("id") Integer id) {
-        WorkoutPlanResponse responses = workoutPlanService.getWorkoutPlanById(id, 2);
-        return ResponseEntity.ok(responses);
+    public ResponseEntity<WorkoutPlanResponse> getWorkoutPlanById(
+            @PathVariable("id") Integer id,
+            @AuthenticationPrincipal UserPrincipal user) {
+        WorkoutPlanResponse response = workoutPlanService.getWorkoutPlanById(id, user.getUserId());
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<WorkoutPlanResponse> updateWorkoutPlanById(@PathVariable("id") Integer id,
-                                                                     @RequestBody WorkoutPlanRequest request ) {
-        WorkoutPlanResponse response = workoutPlanService.updateWorkoutPlanById(request, id, 2);
-
+    public ResponseEntity<WorkoutPlanResponse> updateWorkoutPlanById(
+            @PathVariable("id") Integer id,
+            @RequestBody WorkoutPlanRequest req,
+            @AuthenticationPrincipal UserPrincipal user) {
+        WorkoutPlanResponse response = workoutPlanService.updateWorkoutPlanById(req, id, user.getUserId());
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteWorkoutPlanById(@PathVariable("id") Integer id) {
-        workoutPlanService.deleteWorkoutPlanById(id, 2);
+    public ResponseEntity<String> deleteWorkoutPlanById(
+            @PathVariable("id") Integer id,
+            @AuthenticationPrincipal UserPrincipal user) {
+        workoutPlanService.deleteWorkoutPlanById(id, user.getUserId());
         return ResponseEntity.ok("Workout plan deleted !");
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteAllWorkoutPlans() {
-        workoutPlanService.deleteAllWorkoutPlans(2);
+    public ResponseEntity<String> deleteAllWorkoutPlans(
+            @AuthenticationPrincipal UserPrincipal user) {
+        workoutPlanService.deleteAllWorkoutPlans(user.getUserId());
         return ResponseEntity.ok("All workout plans deleted !");
     }
 }

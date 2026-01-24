@@ -56,7 +56,11 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 
-        String token = jwtUtils.generateToken(authenticatedUser);
+        // Get user to include userId in JWT
+        User user = userRepo.findByUsername(loginRequest.getUsername())
+                .orElseThrow(() -> new UserAlreadyExistsException("User not found"));
+
+        String token = jwtUtils.generateToken(authenticatedUser, user.getId());
 
         AuthResponse response = new AuthResponse(token, true);
 

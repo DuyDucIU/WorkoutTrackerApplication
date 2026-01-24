@@ -24,8 +24,7 @@ public class JwtUtils {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    public String generateToken(Authentication authentication) {
-
+    public String generateToken(Authentication authentication, Integer userId) {
         String username = authentication.getName();
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationMilliseconds);
@@ -33,7 +32,8 @@ public class JwtUtils {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS256);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(authentication.getName())
+                .subject(username)
+                .claim("userId", userId)
                 .issueTime(currentDate)
                 .expirationTime(expireDate)
                 .build();
@@ -63,11 +63,17 @@ public class JwtUtils {
 
     public String getUsername(String token) {
         try {
-            if (!validateToken(token)) {
-                throw new JwtTokenException("Invalid or expired JWT token");
-            }
             SignedJWT jwt = SignedJWT.parse(token);
             return jwt.getJWTClaimsSet().getSubject();
+        } catch (ParseException e) {
+            throw new JwtTokenException("Failed to parse JWT token", e);
+        }
+    }
+
+    public Integer getUserId(String token) {
+        try {
+            SignedJWT jwt = SignedJWT.parse(token);
+            return jwt.getJWTClaimsSet().getIntegerClaim("userId");
         } catch (ParseException e) {
             throw new JwtTokenException("Failed to parse JWT token", e);
         }
