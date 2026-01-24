@@ -36,7 +36,7 @@ public class WorkoutSession {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status = Status.PENDING;
+    private Status status = Status.pending;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -48,8 +48,8 @@ public class WorkoutSession {
     private List<SessionExercise> exercises = new ArrayList<>();
 
     public enum Status {
-        PENDING, COMPLETED, SKIPPED
-    }   
+        pending, completed, skipped
+    }
 
     @Builder
     public WorkoutSession(WorkoutPlan workoutPlan, String name, LocalDateTime scheduledDate, String notes) {
