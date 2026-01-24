@@ -36,7 +36,7 @@ public class WorkoutSession {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status = Status.pending;
+    private WorkoutSessionStatus status = WorkoutSessionStatus.pending;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -46,10 +46,6 @@ public class WorkoutSession {
 
     @OneToMany(mappedBy = "workoutSession", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SessionExercise> exercises = new ArrayList<>();
-
-    public enum Status {
-        pending, completed, skipped
-    }
 
     @Builder
     public WorkoutSession(WorkoutPlan workoutPlan, String name, LocalDateTime scheduledDate, String notes) {

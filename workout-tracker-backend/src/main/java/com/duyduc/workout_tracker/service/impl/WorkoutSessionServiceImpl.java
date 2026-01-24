@@ -4,6 +4,7 @@ import com.duyduc.workout_tracker.dto.request.WorkoutSessionRequest;
 import com.duyduc.workout_tracker.dto.response.WorkoutSessionResponse;
 import com.duyduc.workout_tracker.entity.WorkoutPlan;
 import com.duyduc.workout_tracker.entity.WorkoutSession;
+import com.duyduc.workout_tracker.entity.WorkoutSessionStatus;
 import com.duyduc.workout_tracker.exception.ResourceNotFoundException;
 import com.duyduc.workout_tracker.mapper.WorkoutSessionMapper;
 import com.duyduc.workout_tracker.repository.WorkoutPlanRepo;
@@ -98,7 +99,7 @@ public class WorkoutSessionServiceImpl implements WorkoutSessionService {
     @Transactional
     @Override
     public WorkoutSessionResponse updateStatus(Integer id, Integer workoutPlanId, Integer userId,
-            WorkoutSession.Status status) {
+            WorkoutSessionStatus status) {
         getWorkoutPlanAndValidateOwner(workoutPlanId, userId);
 
         WorkoutSession session = workoutSessionRepo.findByIdAndWorkoutPlanId(id, workoutPlanId)

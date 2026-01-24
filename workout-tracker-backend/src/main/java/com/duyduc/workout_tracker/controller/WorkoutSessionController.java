@@ -2,7 +2,7 @@ package com.duyduc.workout_tracker.controller;
 
 import com.duyduc.workout_tracker.dto.request.WorkoutSessionRequest;
 import com.duyduc.workout_tracker.dto.response.WorkoutSessionResponse;
-import com.duyduc.workout_tracker.entity.WorkoutSession;
+import com.duyduc.workout_tracker.entity.WorkoutSessionStatus;
 import com.duyduc.workout_tracker.security.UserPrincipal;
 import com.duyduc.workout_tracker.service.WorkoutSessionService;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/workout-plans/{planId}/sessions")
+@RequestMapping("/api/plans/{planId}/sessions")
 public class WorkoutSessionController {
 
     private final WorkoutSessionService workoutSessionService;
@@ -61,7 +61,7 @@ public class WorkoutSessionController {
     public ResponseEntity<WorkoutSessionResponse> updateStatus(
             @PathVariable("planId") Integer planId,
             @PathVariable("id") Integer id,
-            @RequestParam("status") WorkoutSession.Status status,
+            @RequestParam("status") WorkoutSessionStatus status,
             @AuthenticationPrincipal UserPrincipal user) {
         WorkoutSessionResponse response = workoutSessionService.updateStatus(id, planId, user.getUserId(), status);
         return ResponseEntity.ok(response);

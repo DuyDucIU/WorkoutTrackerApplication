@@ -26,9 +26,5 @@ public class ExerciseMuscleGroup {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TargetType targetType = TargetType.PRIMARY;
-
-    public enum TargetType {
-        PRIMARY, SECONDARY
-    }
+    private TargetType targetType = TargetType.primary;
 }
