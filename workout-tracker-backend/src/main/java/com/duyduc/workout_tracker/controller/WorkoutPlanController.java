@@ -4,6 +4,7 @@ import com.duyduc.workout_tracker.dto.request.WorkoutPlanRequest;
 import com.duyduc.workout_tracker.dto.response.WorkoutPlanResponse;
 import com.duyduc.workout_tracker.security.UserPrincipal;
 import com.duyduc.workout_tracker.service.WorkoutPlanService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class WorkoutPlanController {
 
     @PostMapping
     public ResponseEntity<WorkoutPlanResponse> createWorkoutPlan(
-            @RequestBody WorkoutPlanRequest req,
+            @Valid @RequestBody WorkoutPlanRequest req,
             @AuthenticationPrincipal UserPrincipal user) {
         WorkoutPlanResponse response = workoutPlanService.createWorkoutPlan(req, user.getUserId());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -45,7 +46,7 @@ public class WorkoutPlanController {
     @PatchMapping("/{id}")
     public ResponseEntity<WorkoutPlanResponse> updateWorkoutPlanById(
             @PathVariable("id") Integer id,
-            @RequestBody WorkoutPlanRequest req,
+            @Valid @RequestBody WorkoutPlanRequest req,
             @AuthenticationPrincipal UserPrincipal user) {
         WorkoutPlanResponse response = workoutPlanService.updateWorkoutPlanById(req, id, user.getUserId());
         return ResponseEntity.ok(response);
