@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,20 +53,26 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest loginRequest) {
-        Authentication authenticatedUser = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(),
-                loginRequest.getPassword()));
+        try {
+            Authentication authenticatedUser =
+                    authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    loginRequest.getUsername(),
+                                    loginRequest.getPassword()
+                            )
+                    );
 
-        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+            SecurityContextHolder.getContext()
+                    .setAuthentication(authenticatedUser);
 
-        // Get user to include userId in JWT
-        User user = userRepo.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
+            User user = userRepo.findByUsername(loginRequest.getUsername())
+                    .orElseThrow(); // giờ cái này gần như không bao giờ fail
 
-        String token = jwtUtils.generateToken(authenticatedUser, user.getId());
+            String token = jwtUtils.generateToken(authenticatedUser, user.getId());
+            return new AuthResponse(token, true);
 
-        AuthResponse response = new AuthResponse(token, true);
-
-        return response;
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException("Invalid username or password");
+        }
     }
 }
