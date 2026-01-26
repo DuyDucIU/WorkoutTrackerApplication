@@ -52,50 +52,43 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     @Transactional
     @Override
     public WorkoutPlanResponse copyWorkoutPlan(Integer id, Integer userId) {
-        WorkoutPlan workoutPlan = workoutPlanRepo.findByIdAndUserId(id, userId)
+        WorkoutPlan oldPlan = workoutPlanRepo.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Workout not found with id: " + id));
 
-        WorkoutPlan newWorkoutPlan = WorkoutPlan.builder()
-                .name(workoutPlan.getName() + "(Copy)")
-                .description(workoutPlan.getDescription())
-                .user(workoutPlan.getUser())
+        WorkoutPlan newPlan = WorkoutPlan.builder()
+                .name(oldPlan.getName() + " (Copy)")
+                .description(oldPlan.getDescription())
+                .user(oldPlan.getUser())
                 .build();
 
-        WorkoutPlan savedWorkout = workoutPlanRepo.save(newWorkoutPlan);
-
-        List<WorkoutSession> sessions = workoutSessionRepo.findByWorkoutPlanId(workoutPlan.getId());
-
-        for (WorkoutSession oldSession : sessions) {
+        for (WorkoutSession oldSession : oldPlan.getSessions()) {
 
             WorkoutSession newSession = WorkoutSession.builder()
                     .name(oldSession.getName())
                     .notes(oldSession.getNotes())
                     .scheduledDate(oldSession.getScheduledDate())
-                    .workoutPlan(newWorkoutPlan)
+                    .workoutPlan(newPlan)
                     .build();
 
-            workoutSessionRepo.save(newSession);
-
-            // Copy exercises
-            List<SessionExercise> exercises =
-                    sessionExerciseRepo.findByWorkoutSessionIdOrderByOrderIndexAsc(oldSession.getId());
-
-            for (SessionExercise oldEx : exercises) {
-
-                SessionExercise newEx = SessionExercise.builder()
-                        .workoutSession(newSession)
-                        .exercise(oldEx.getExercise())
-                        .sets(oldEx.getSets())
-                        .reps(oldEx.getReps())
-                        .weight(oldEx.getWeight())
-                        .durationMinutes(oldEx.getDurationMinutes())
-                        .orderIndex(oldEx.getOrderIndex())
-                        .notes(oldEx.getNotes())
-                        .build();
-
-                sessionExerciseRepo.save(newEx);
+            for (SessionExercise oldEx : oldSession.getExercises()) {
+                newSession.getExercises().add(
+                        SessionExercise.builder()
+                                .workoutSession(newSession)
+                                .exercise(oldEx.getExercise())
+                                .sets(oldEx.getSets())
+                                .reps(oldEx.getReps())
+                                .weight(oldEx.getWeight())
+                                .durationMinutes(oldEx.getDurationMinutes())
+                                .orderIndex(oldEx.getOrderIndex())
+                                .notes(oldEx.getNotes())
+                                .build()
+                );
             }
+
+            newPlan.getSessions().add(newSession);
         }
+
+        WorkoutPlan savedWorkout = workoutPlanRepo.save(newPlan);
 
         WorkoutPlanResponse response = workoutPlanMapper.toWorkoutPlanResponse(savedWorkout);
 

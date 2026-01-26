@@ -10,7 +10,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -38,7 +40,7 @@ public class WorkoutPlan {
     private User user;
 
     @OneToMany(mappedBy = "workoutPlan", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WorkoutSession> sessions = new ArrayList<>();
+    private Set<WorkoutSession> sessions = new HashSet<>();
 
     @Builder
     public WorkoutPlan(String name, String description, User user) {
