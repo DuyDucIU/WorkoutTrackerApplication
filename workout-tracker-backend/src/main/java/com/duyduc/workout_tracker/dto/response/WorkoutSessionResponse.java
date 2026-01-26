@@ -17,4 +17,5 @@ public class WorkoutSessionResponse {
     private WorkoutSessionStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private java.util.List<SessionExerciseResponse> exercises;
 }

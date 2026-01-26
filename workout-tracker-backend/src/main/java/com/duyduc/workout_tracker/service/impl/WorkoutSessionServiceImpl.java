@@ -2,11 +2,10 @@ package com.duyduc.workout_tracker.service.impl;
 
 import com.duyduc.workout_tracker.dto.request.WorkoutSessionRequest;
 import com.duyduc.workout_tracker.dto.response.WorkoutSessionResponse;
-import com.duyduc.workout_tracker.entity.WorkoutPlan;
-import com.duyduc.workout_tracker.entity.WorkoutSession;
-import com.duyduc.workout_tracker.entity.WorkoutSessionStatus;
+import com.duyduc.workout_tracker.entity.*;
 import com.duyduc.workout_tracker.exception.ResourceNotFoundException;
 import com.duyduc.workout_tracker.mapper.WorkoutSessionMapper;
+import com.duyduc.workout_tracker.repository.ExerciseRepo;
 import com.duyduc.workout_tracker.repository.WorkoutPlanRepo;
 import com.duyduc.workout_tracker.repository.WorkoutSessionRepo;
 import com.duyduc.workout_tracker.service.WorkoutSessionService;
@@ -23,6 +22,7 @@ public class WorkoutSessionServiceImpl implements WorkoutSessionService {
 
     private final WorkoutSessionRepo workoutSessionRepo;
     private final WorkoutPlanRepo workoutPlanRepo;
+    private final ExerciseRepo exerciseRepo;
     private final WorkoutSessionMapper workoutSessionMapper;
 
     private WorkoutPlan getWorkoutPlanAndValidateOwner(Integer workoutPlanId, Integer userId) {
@@ -48,6 +48,27 @@ public class WorkoutSessionServiceImpl implements WorkoutSessionService {
                 .scheduledDate(request.getScheduledDate())
                 .notes(request.getNotes())
                 .build();
+
+        if (request.getExercises() != null && !request.getExercises().isEmpty()) {
+            List<SessionExercise> sessionExercises = request.getExercises().stream().map(exRequest -> {
+                Exercise exercise = exerciseRepo.findById(exRequest.getExerciseId())
+                        .orElseThrow(() -> new ResourceNotFoundException(
+                                "Exercise not found with id: " + exRequest.getExerciseId()));
+
+                return SessionExercise.builder()
+                        .workoutSession(workoutSession)
+                        .exercise(exercise)
+                        .sets(exRequest.getSets())
+                        .reps(exRequest.getReps())
+                        .weight(exRequest.getWeight())
+                        .durationMinutes(exRequest.getDurationMinutes())
+                        .orderIndex(exRequest.getOrderIndex())
+                        .notes(exRequest.getNotes())
+                        .build();
+            }).collect(Collectors.toList());
+
+            workoutSession.setExercises(sessionExercises);
+        }
 
         WorkoutSession savedSession = workoutSessionRepo.save(workoutSession);
         return workoutSessionMapper.toWorkoutSessionResponse(savedSession);
@@ -90,6 +111,27 @@ public class WorkoutSessionServiceImpl implements WorkoutSessionService {
         }
         if (request.getNotes() != null) {
             session.setNotes(request.getNotes());
+        }
+
+        if (request.getExercises() != null && !request.getExercises().isEmpty()) {
+            List<SessionExercise> newExercises = request.getExercises().stream().map(exRequest -> {
+                Exercise exercise = exerciseRepo.findById(exRequest.getExerciseId())
+                        .orElseThrow(() -> new ResourceNotFoundException(
+                                "Exercise not found with id: " + exRequest.getExerciseId()));
+
+                return SessionExercise.builder()
+                        .workoutSession(session)
+                        .exercise(exercise)
+                        .sets(exRequest.getSets())
+                        .reps(exRequest.getReps())
+                        .weight(exRequest.getWeight())
+                        .durationMinutes(exRequest.getDurationMinutes())
+                        .orderIndex(exRequest.getOrderIndex())
+                        .notes(exRequest.getNotes())
+                        .build();
+            }).collect(Collectors.toList());
+
+            session.getExercises().addAll(newExercises);
         }
 
         WorkoutSession updatedSession = workoutSessionRepo.save(session);

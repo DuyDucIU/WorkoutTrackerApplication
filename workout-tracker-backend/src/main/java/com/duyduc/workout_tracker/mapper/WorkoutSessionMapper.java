@@ -5,7 +5,7 @@ import com.duyduc.workout_tracker.entity.WorkoutSession;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { SessionExerciseMapper.class })
 public interface WorkoutSessionMapper {
 
     @Mapping(target = "workoutPlanId", source = "workoutPlan.id")

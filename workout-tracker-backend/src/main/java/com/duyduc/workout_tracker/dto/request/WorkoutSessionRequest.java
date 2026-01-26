@@ -1,5 +1,6 @@
 package com.duyduc.workout_tracker.dto.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -17,4 +18,7 @@ public class WorkoutSessionRequest {
 
     @Size(max = 500, message = "Notes must not exceed 500 characters")
     private String notes;
+
+    @Valid
+    private java.util.List<SessionExerciseRequest> exercises;
 }
