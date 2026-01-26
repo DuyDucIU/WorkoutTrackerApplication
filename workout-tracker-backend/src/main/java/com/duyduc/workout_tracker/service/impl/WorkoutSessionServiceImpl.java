@@ -62,7 +62,6 @@ public class WorkoutSessionServiceImpl implements WorkoutSessionService {
                         .reps(exRequest.getReps())
                         .weight(exRequest.getWeight())
                         .durationMinutes(exRequest.getDurationMinutes())
-                        .orderIndex(exRequest.getOrderIndex())
                         .notes(exRequest.getNotes())
                         .build();
             }).collect(Collectors.toList());
@@ -126,7 +125,6 @@ public class WorkoutSessionServiceImpl implements WorkoutSessionService {
                         .reps(exRequest.getReps())
                         .weight(exRequest.getWeight())
                         .durationMinutes(exRequest.getDurationMinutes())
-                        .orderIndex(exRequest.getOrderIndex())
                         .notes(exRequest.getNotes())
                         .build();
             }).collect(Collectors.toList());

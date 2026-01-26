@@ -16,7 +16,6 @@ public class SessionExerciseResponse {
     private Integer reps;
     private BigDecimal weight;
     private Integer durationMinutes;
-    private Integer orderIndex;
     private String notes;
     private Boolean completed;
 }

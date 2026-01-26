@@ -35,9 +35,6 @@ public class SessionExercise {
 
     private Integer durationMinutes;
 
-    @Column(nullable = false)
-    private Integer orderIndex = 1;
-
     @Column(columnDefinition = "TEXT")
     private String notes;
 
@@ -47,14 +44,13 @@ public class SessionExercise {
     @Builder
     public SessionExercise(WorkoutSession workoutSession, Exercise exercise, Integer sets,
             Integer reps, BigDecimal weight, Integer durationMinutes,
-            Integer orderIndex, String notes) {
+            String notes) {
         this.workoutSession = workoutSession;
         this.exercise = exercise;
         this.sets = sets;
         this.reps = reps;
         this.weight = weight;
         this.durationMinutes = durationMinutes;
-        this.orderIndex = orderIndex != null ? orderIndex : 1;
         this.notes = notes;
     }
 }

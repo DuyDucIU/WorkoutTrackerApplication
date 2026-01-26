@@ -63,7 +63,6 @@ public class SessionExerciseServiceImpl implements SessionExerciseService {
                 .reps(request.getReps())
                 .weight(request.getWeight())
                 .durationMinutes(request.getDurationMinutes())
-                .orderIndex(request.getOrderIndex())
                 .notes(request.getNotes())
                 .build();
 
@@ -75,7 +74,7 @@ public class SessionExerciseServiceImpl implements SessionExerciseService {
     public List<SessionExerciseResponse> getSessionExercises(Integer sessionId, Integer planId, Integer userId) {
         getWorkoutSessionAndValidateOwner(sessionId, planId, userId);
 
-        List<SessionExercise> exercises = sessionExerciseRepo.findByWorkoutSessionIdOrderByOrderIndexAsc(sessionId);
+        List<SessionExercise> exercises = sessionExerciseRepo.findByWorkoutSessionId(sessionId);
         return exercises.stream()
                 .map(sessionExerciseMapper::toSessionExerciseResponse)
                 .collect(Collectors.toList());
@@ -118,9 +117,6 @@ public class SessionExerciseServiceImpl implements SessionExerciseService {
         }
         if (request.getDurationMinutes() != null) {
             exercise.setDurationMinutes(request.getDurationMinutes());
-        }
-        if (request.getOrderIndex() != null) {
-            exercise.setOrderIndex(request.getOrderIndex());
         }
         if (request.getNotes() != null) {
             exercise.setNotes(request.getNotes());

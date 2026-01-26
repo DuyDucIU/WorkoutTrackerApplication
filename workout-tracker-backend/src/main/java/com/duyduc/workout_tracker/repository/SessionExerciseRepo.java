@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface SessionExerciseRepo extends JpaRepository<SessionExercise, Integer> {
 
-    List<SessionExercise> findByWorkoutSessionIdOrderByOrderIndexAsc(Integer workoutSessionId);
+    List<SessionExercise> findByWorkoutSessionId(Integer workoutSessionId);
 
     Optional<SessionExercise> findByIdAndWorkoutSessionId(Integer id, Integer workoutSessionId);
 

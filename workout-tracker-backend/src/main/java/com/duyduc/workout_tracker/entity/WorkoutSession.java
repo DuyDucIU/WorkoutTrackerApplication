@@ -45,7 +45,6 @@ public class WorkoutSession {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "workoutSession", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("orderIndex ASC")
     private List<SessionExercise> exercises = new ArrayList<>();
 
     @Builder

@@ -79,10 +79,8 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
                                 .reps(oldEx.getReps())
                                 .weight(oldEx.getWeight())
                                 .durationMinutes(oldEx.getDurationMinutes())
-                                .orderIndex(oldEx.getOrderIndex())
                                 .notes(oldEx.getNotes())
-                                .build()
-                );
+                                .build());
             }
 
             newPlan.getSessions().add(newSession);

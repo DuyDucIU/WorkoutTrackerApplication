@@ -26,10 +26,6 @@ public class SessionExerciseRequest {
     @Min(value = 0, message = "Duration must be non-negative")
     private Integer durationMinutes;
 
-    @Min(value = 1, message = "Order index must start from 1")
-    @NotNull(message = "Order index is required")
-    private Integer orderIndex;
-
     @Size(max = 500, message = "Notes must not exceed 500 characters")
     private String notes;
 }
