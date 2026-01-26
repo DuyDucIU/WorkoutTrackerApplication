@@ -49,8 +49,8 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
         List<WorkoutPlan> workoutPlans = workoutPlanRepo.findByUserId(userId);
 
         List<WorkoutPlanResponse> response = workoutPlans.stream()
-                                            .map(workoutPlan -> workoutPlanMapper.toWorkoutPlanResponse(workoutPlan))
-                                            .collect(Collectors.toList());
+                .map(workoutPlan -> workoutPlanMapper.toWorkoutPlanResponse(workoutPlan))
+                .collect(Collectors.toList());
 
         return response;
     }
@@ -69,13 +69,12 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     @Transactional
     @Override
     public WorkoutPlanResponse updateWorkoutPlanById(WorkoutPlanRequest request, Integer id, Integer userId) {
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
         WorkoutPlan workoutPlan = workoutPlanRepo.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Workout not found with id: " + id));
 
-        if(request.getName() != null && !request.getName().isBlank()) workoutPlan.setName(request.getName());
+        if (request.getName() != null && !request.getName().isBlank())
+            workoutPlan.setName(request.getName());
 
         workoutPlan.setDescription(request.getDescription());
 

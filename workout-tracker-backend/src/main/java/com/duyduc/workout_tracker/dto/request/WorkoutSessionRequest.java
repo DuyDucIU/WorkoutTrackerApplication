@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class WorkoutSessionRequest {
@@ -20,5 +21,5 @@ public class WorkoutSessionRequest {
     private String notes;
 
     @Valid
-    private java.util.List<SessionExerciseRequest> exercises;
+    private List<SessionExerciseRequest> exercises;
 }

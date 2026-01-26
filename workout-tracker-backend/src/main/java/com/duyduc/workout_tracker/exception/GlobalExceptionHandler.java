@@ -3,7 +3,6 @@ package com.duyduc.workout_tracker.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -94,18 +93,18 @@ public class GlobalExceptionHandler {
                 return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
         }
 
-//        @ExceptionHandler(Exception.class)
-//        public ResponseEntity<ErrorResponse> handleGenericException(
-//                        Exception ex, HttpServletRequest request) {
-//
-//                ErrorResponse errorResponse = ErrorResponse.builder()
-//                                .timestamp(LocalDateTime.now())
-//                                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-//                                .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-//                                .message("An unexpected error occurred")
-//                                .path(request.getRequestURI())
-//                                .build();
-//
-//                return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
+        @ExceptionHandler(Exception.class)
+        public ResponseEntity<ErrorResponse> handleGenericException(
+                        Exception ex, HttpServletRequest request) {
+
+                ErrorResponse errorResponse = ErrorResponse.builder()
+                                .timestamp(LocalDateTime.now())
+                                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                                .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                                .message("An unexpected error occurred")
+                                .path(request.getRequestURI())
+                                .build();
+
+                return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 }

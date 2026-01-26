@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -17,5 +18,5 @@ public class WorkoutSessionResponse {
     private WorkoutSessionStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private java.util.List<SessionExerciseResponse> exercises;
+    private List<SessionExerciseResponse> exercises;
 }

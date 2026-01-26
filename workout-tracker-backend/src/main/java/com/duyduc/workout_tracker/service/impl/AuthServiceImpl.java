@@ -7,7 +7,6 @@ import com.duyduc.workout_tracker.entity.User;
 import com.duyduc.workout_tracker.repository.UserRepo;
 import com.duyduc.workout_tracker.security.JwtUtils;
 import com.duyduc.workout_tracker.service.AuthService;
-import com.duyduc.workout_tracker.exception.ResourceNotFoundException;
 import com.duyduc.workout_tracker.exception.UserAlreadyExistsException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -54,13 +53,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(LoginRequest loginRequest) {
         try {
-            Authentication authenticatedUser =
-                    authenticationManager.authenticate(
-                            new UsernamePasswordAuthenticationToken(
-                                    loginRequest.getUsername(),
-                                    loginRequest.getPassword()
-                            )
-                    );
+            Authentication authenticatedUser = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()));
 
             SecurityContextHolder.getContext()
                     .setAuthentication(authenticatedUser);
