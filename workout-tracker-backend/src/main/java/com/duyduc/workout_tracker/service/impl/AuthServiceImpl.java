@@ -3,6 +3,7 @@ package com.duyduc.workout_tracker.service.impl;
 import com.duyduc.workout_tracker.dto.request.LoginRequest;
 import com.duyduc.workout_tracker.dto.request.RegisterRequest;
 import com.duyduc.workout_tracker.dto.response.AuthResponse;
+import com.duyduc.workout_tracker.dto.response.UserResponse;
 import com.duyduc.workout_tracker.entity.User;
 import com.duyduc.workout_tracker.repository.UserRepo;
 import com.duyduc.workout_tracker.security.JwtUtils;
@@ -65,7 +66,13 @@ public class AuthServiceImpl implements AuthService {
                     .orElseThrow(); // giờ cái này gần như không bao giờ fail
 
             String token = jwtUtils.generateToken(authenticatedUser, user.getId());
-            return new AuthResponse(token, true);
+            UserResponse userResponse = UserResponse.builder()
+                    .id(user.getId())
+                    .username(user.getUsername())
+                    .email(user.getEmail())
+                    .fullName(user.getFullName())
+                    .build();
+            return new AuthResponse(token, true, userResponse);
 
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username or password");

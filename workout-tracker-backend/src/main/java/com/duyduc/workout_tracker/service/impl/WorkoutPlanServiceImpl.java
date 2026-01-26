@@ -3,7 +3,6 @@ package com.duyduc.workout_tracker.service.impl;
 import com.duyduc.workout_tracker.entity.SessionExercise;
 import com.duyduc.workout_tracker.entity.User;
 import com.duyduc.workout_tracker.entity.WorkoutSession;
-import com.duyduc.workout_tracker.repository.SessionExerciseRepo;
 import com.duyduc.workout_tracker.repository.UserRepo;
 import com.duyduc.workout_tracker.dto.request.WorkoutPlanRequest;
 import com.duyduc.workout_tracker.dto.response.WorkoutPlanResponse;
@@ -11,7 +10,6 @@ import com.duyduc.workout_tracker.entity.WorkoutPlan;
 import com.duyduc.workout_tracker.exception.ResourceNotFoundException;
 import com.duyduc.workout_tracker.mapper.WorkoutPlanMapper;
 import com.duyduc.workout_tracker.repository.WorkoutPlanRepo;
-import com.duyduc.workout_tracker.repository.WorkoutSessionRepo;
 import com.duyduc.workout_tracker.service.WorkoutPlanService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -27,8 +25,6 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     private final UserRepo userRepo;
     private final WorkoutPlanRepo workoutPlanRepo;
     private final WorkoutPlanMapper workoutPlanMapper;
-    private final WorkoutSessionRepo workoutSessionRepo;
-    private final SessionExerciseRepo sessionExerciseRepo;
 
     @Transactional
     @Override
