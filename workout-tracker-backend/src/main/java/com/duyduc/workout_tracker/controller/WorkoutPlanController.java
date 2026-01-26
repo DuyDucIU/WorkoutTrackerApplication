@@ -28,6 +28,14 @@ public class WorkoutPlanController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @PostMapping("/{id}/copy")
+    public ResponseEntity<WorkoutPlanResponse> copyWorkoutPlan(
+            @PathVariable("id") Integer id,
+            @AuthenticationPrincipal UserPrincipal user) {
+        WorkoutPlanResponse response = workoutPlanService.copyWorkoutPlan(id, user.getUserId());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
     @GetMapping
     public ResponseEntity<List<WorkoutPlanResponse>> getWorkoutPlans(
             @AuthenticationPrincipal UserPrincipal user) {

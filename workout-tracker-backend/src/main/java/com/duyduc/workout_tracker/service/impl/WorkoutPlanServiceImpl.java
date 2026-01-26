@@ -1,6 +1,9 @@
 package com.duyduc.workout_tracker.service.impl;
 
+import com.duyduc.workout_tracker.entity.SessionExercise;
 import com.duyduc.workout_tracker.entity.User;
+import com.duyduc.workout_tracker.entity.WorkoutSession;
+import com.duyduc.workout_tracker.repository.SessionExerciseRepo;
 import com.duyduc.workout_tracker.repository.UserRepo;
 import com.duyduc.workout_tracker.dto.request.WorkoutPlanRequest;
 import com.duyduc.workout_tracker.dto.response.WorkoutPlanResponse;
@@ -8,6 +11,7 @@ import com.duyduc.workout_tracker.entity.WorkoutPlan;
 import com.duyduc.workout_tracker.exception.ResourceNotFoundException;
 import com.duyduc.workout_tracker.mapper.WorkoutPlanMapper;
 import com.duyduc.workout_tracker.repository.WorkoutPlanRepo;
+import com.duyduc.workout_tracker.repository.WorkoutSessionRepo;
 import com.duyduc.workout_tracker.service.WorkoutPlanService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -23,6 +27,8 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     private final UserRepo userRepo;
     private final WorkoutPlanRepo workoutPlanRepo;
     private final WorkoutPlanMapper workoutPlanMapper;
+    private final WorkoutSessionRepo workoutSessionRepo;
+    private final SessionExerciseRepo sessionExerciseRepo;
 
     @Transactional
     @Override
@@ -37,6 +43,59 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
                 .build();
 
         WorkoutPlan savedWorkout = workoutPlanRepo.save(workoutPlan);
+
+        WorkoutPlanResponse response = workoutPlanMapper.toWorkoutPlanResponse(savedWorkout);
+
+        return response;
+    }
+
+    @Transactional
+    @Override
+    public WorkoutPlanResponse copyWorkoutPlan(Integer id, Integer userId) {
+        WorkoutPlan workoutPlan = workoutPlanRepo.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workout not found with id: " + id));
+
+        WorkoutPlan newWorkoutPlan = WorkoutPlan.builder()
+                .name(workoutPlan.getName() + "(Copy)")
+                .description(workoutPlan.getDescription())
+                .user(workoutPlan.getUser())
+                .build();
+
+        WorkoutPlan savedWorkout = workoutPlanRepo.save(newWorkoutPlan);
+
+        List<WorkoutSession> sessions = workoutSessionRepo.findByWorkoutPlanId(workoutPlan.getId());
+
+        for (WorkoutSession oldSession : sessions) {
+
+            WorkoutSession newSession = WorkoutSession.builder()
+                    .name(oldSession.getName())
+                    .notes(oldSession.getNotes())
+                    .scheduledDate(oldSession.getScheduledDate())
+                    .workoutPlan(newWorkoutPlan)
+                    .build();
+
+            workoutSessionRepo.save(newSession);
+
+            // Copy exercises
+            List<SessionExercise> exercises =
+                    sessionExerciseRepo.findByWorkoutSessionIdOrderByOrderIndexAsc(oldSession.getId());
+
+            for (SessionExercise oldEx : exercises) {
+
+                SessionExercise newEx = SessionExercise.builder()
+                        .workoutSession(newSession)
+                        .exercise(oldEx.getExercise())
+                        .sets(oldEx.getSets())
+                        .reps(oldEx.getReps())
+                        .weight(oldEx.getWeight())
+                        .durationMinutes(oldEx.getDurationMinutes())
+                        .orderIndex(oldEx.getOrderIndex())
+                        .notes(oldEx.getNotes())
+                        .build();
+
+                sessionExerciseRepo.save(newEx);
+            }
+        }
 
         WorkoutPlanResponse response = workoutPlanMapper.toWorkoutPlanResponse(savedWorkout);
 
