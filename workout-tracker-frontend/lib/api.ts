@@ -13,6 +13,8 @@ const api = axios.create({
   },
 });
 
+let isRedirecting = false;
+
 // Request interceptor to attach JWT token
 api.interceptors.request.use(
   (config) => {
@@ -33,14 +35,39 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      if (typeof window !== 'undefined') {
+    const status = error.response?.status;
+    const currentPath = typeof window !== 'undefined'
+      ? window.location.pathname
+      : '';
+
+    const token = localStorage.getItem('token');
+
+    // Chỉ xử lý session expired khi:
+    // - Có token sẵn
+    // - Không phải đang ở trang login
+    // Prevent multiple redirects/toasts
+    if (isRedirecting) {
+      return Promise.reject(error);
+    }
+
+    // Handle 401 Unauthorized (Session Expired)
+    if (status === 401) {
+      if (currentPath !== '/login') {
+        isRedirecting = true;
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         toast.error('Session expired, please login again');
-        window.location.href = '/login';
+
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 100);
+
+        return Promise.reject(error);
       }
-    } else if (error.response?.data?.message) {
+    }
+
+    // Lỗi thường (login sai, validation, v.v)
+    if (error.response?.data?.message) {
       toast.error(error.response.data.message);
     } else if (error.response?.data?.errors) {
       const errors = error.response.data.errors;
@@ -48,9 +75,11 @@ api.interceptors.response.use(
         toast.error(msg as string);
       });
     }
+
     return Promise.reject(error);
   }
 );
+
 
 export default api;
 
