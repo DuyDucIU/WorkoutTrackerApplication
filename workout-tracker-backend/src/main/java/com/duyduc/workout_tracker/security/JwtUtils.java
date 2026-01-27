@@ -1,6 +1,5 @@
 package com.duyduc.workout_tracker.security;
 
-import com.duyduc.workout_tracker.exception.JwtTokenException;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -8,6 +7,8 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -46,40 +47,50 @@ public class JwtUtils {
             jwsObject.sign(new MACSigner(jwtSecret.getBytes()));
             return jwsObject.serialize();
         } catch (JOSEException e) {
-            throw new JwtTokenException("Failed to generate JWT token", e);
+            throw new BadCredentialsException("Failed to generate JWT token", e);
         }
     }
 
-    public boolean validateToken(String token) {
+    private JWTClaimsSet parseAndValidate(String token) {
         try {
             JWSVerifier verifier = new MACVerifier(jwtSecret.getBytes());
             SignedJWT signedJWT = SignedJWT.parse(token);
+
+            if (!signedJWT.verify(verifier)) {
+                throw new BadCredentialsException("Invalid JWT signature");
+            }
+
             Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-            return signedJWT.verify(verifier) && expiryTime.after(new Date());
+            if (expiryTime == null || expiryTime.before(new Date())) {
+                throw new BadCredentialsException("JWT token expired");
+            }
+
+            return signedJWT.getJWTClaimsSet();
+
         } catch (JOSEException | ParseException e) {
-            throw new JwtTokenException("Failed to validate JWT token", e);
+            throw new AuthenticationServiceException("Invalid or expired JWT", e);
         }
     }
 
-    public String getUsername(String token) {
+
+    public boolean validateToken(String token) {
+        parseAndValidate(token);
+        return true;
+    }
+
+    public String getUsernameFromToken(String token) {
+        return parseAndValidate(token).getSubject();
+    }
+
+    public Integer getUserIdFromToken(String token) {
         try {
-            SignedJWT jwt = SignedJWT.parse(token);
-            return jwt.getJWTClaimsSet().getSubject();
+            return parseAndValidate(token).getIntegerClaim("userId");
         } catch (ParseException e) {
-            throw new JwtTokenException("Failed to parse JWT token", e);
+            throw new BadCredentialsException("Invalid or expired JWT", e);
         }
     }
 
-    public Integer getUserId(String token) {
-        try {
-            SignedJWT jwt = SignedJWT.parse(token);
-            return jwt.getJWTClaimsSet().getIntegerClaim("userId");
-        } catch (ParseException e) {
-            throw new JwtTokenException("Failed to parse JWT token", e);
-        }
-    }
-
-    public String getToken(HttpServletRequest request) {
+    public String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {

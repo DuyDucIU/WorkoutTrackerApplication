@@ -81,29 +81,29 @@ public class SessionExerciseServiceImpl implements SessionExerciseService {
     }
 
     @Override
-    public SessionExerciseResponse getSessionExerciseById(Integer id, Integer sessionId, Integer planId,
-            Integer userId) {
+    public SessionExerciseResponse getSessionExerciseById(Integer exerciseId, Integer sessionId, Integer planId,
+                                                          Integer userId) {
         getWorkoutSessionAndValidateOwner(sessionId, planId, userId);
 
-        SessionExercise exercise = sessionExerciseRepo.findByIdAndWorkoutSessionId(id, sessionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Session exercise not found with id: " + id));
+        SessionExercise exercise = sessionExerciseRepo.findByIdAndWorkoutSessionId(exerciseId, sessionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Session exercise not found with exerciseId: " + exerciseId));
 
         return sessionExerciseMapper.toSessionExerciseResponse(exercise);
     }
 
     @Transactional
     @Override
-    public SessionExerciseResponse updateSessionExercise(SessionExerciseRequest request, Integer id, Integer sessionId,
-            Integer planId, Integer userId) {
+    public SessionExerciseResponse updateSessionExercise(SessionExerciseRequest request, Integer exerciseId, Integer sessionId,
+                                                         Integer planId, Integer userId) {
         getWorkoutSessionAndValidateOwner(sessionId, planId, userId);
 
-        SessionExercise exercise = sessionExerciseRepo.findByIdAndWorkoutSessionId(id, sessionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Session exercise not found with id: " + id));
+        SessionExercise exercise = sessionExerciseRepo.findByIdAndWorkoutSessionId(exerciseId, sessionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Session exercise not found with exerciseId: " + exerciseId));
 
         if (request.getExerciseId() != null) {
             Exercise newExercise = exerciseRepo.findById(request.getExerciseId())
                     .orElseThrow(() -> new ResourceNotFoundException(
-                            "Exercise not found with id: " + request.getExerciseId()));
+                            "Exercise not found with exerciseId: " + request.getExerciseId()));
             exercise.setExercise(newExercise);
         }
         if (request.getSets() != null) {
@@ -128,12 +128,12 @@ public class SessionExerciseServiceImpl implements SessionExerciseService {
 
     @Transactional
     @Override
-    public SessionExerciseResponse markAsCompleted(Integer id, Integer sessionId, Integer planId, Integer userId,
-            Boolean completed) {
+    public SessionExerciseResponse markAsCompleted(Integer exerciseId, Integer sessionId, Integer planId, Integer userId,
+                                                   Boolean completed) {
         getWorkoutSessionAndValidateOwner(sessionId, planId, userId);
 
-        SessionExercise exercise = sessionExerciseRepo.findByIdAndWorkoutSessionId(id, sessionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Session exercise not found with id: " + id));
+        SessionExercise exercise = sessionExerciseRepo.findByIdAndWorkoutSessionId(exerciseId, sessionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Session exercise not found with exerciseId: " + exerciseId));
 
         exercise.setCompleted(completed);
         SessionExercise updatedExercise = sessionExerciseRepo.save(exercise);
@@ -142,11 +142,11 @@ public class SessionExerciseServiceImpl implements SessionExerciseService {
 
     @Transactional
     @Override
-    public void deleteSessionExercise(Integer id, Integer sessionId, Integer planId, Integer userId) {
+    public void deleteSessionExercise(Integer exerciseId, Integer sessionId, Integer planId, Integer userId) {
         getWorkoutSessionAndValidateOwner(sessionId, planId, userId);
 
-        SessionExercise exercise = sessionExerciseRepo.findByIdAndWorkoutSessionId(id, sessionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Session exercise not found with id: " + id));
+        SessionExercise exercise = sessionExerciseRepo.findByIdAndWorkoutSessionId(exerciseId, sessionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Session exercise not found with exerciseId: " + exerciseId));
 
         sessionExerciseRepo.delete(exercise);
     }

@@ -42,49 +42,49 @@ public class SessionExerciseController {
                 return ResponseEntity.ok(responses);
         }
 
-        @GetMapping("/{id}")
+        @GetMapping("/{exerciseId}")
         public ResponseEntity<SessionExerciseResponse> getSessionExerciseById(
                         @PathVariable("planId") Integer planId,
                         @PathVariable("sessionId") Integer sessionId,
-                        @PathVariable("id") Integer id,
+                        @PathVariable("exerciseId") Integer exerciseId,
                         @AuthenticationPrincipal UserPrincipal user) {
-                SessionExerciseResponse response = sessionExerciseService.getSessionExerciseById(id, sessionId, planId,
+                SessionExerciseResponse response = sessionExerciseService.getSessionExerciseById(exerciseId, sessionId, planId,
                                 user.getUserId());
                 return ResponseEntity.ok(response);
         }
 
-        @PatchMapping("/{id}")
+        @PatchMapping("/{exerciseId}")
         public ResponseEntity<SessionExerciseResponse> updateSessionExercise(
                         @PathVariable("planId") Integer planId,
                         @PathVariable("sessionId") Integer sessionId,
-                        @PathVariable("id") Integer id,
+                        @PathVariable("exerciseId") Integer exerciseId,
                         @Valid @RequestBody SessionExerciseRequest request,
                         @AuthenticationPrincipal UserPrincipal user) {
-                SessionExerciseResponse response = sessionExerciseService.updateSessionExercise(request, id, sessionId,
+                SessionExerciseResponse response = sessionExerciseService.updateSessionExercise(request, exerciseId, sessionId,
                                 planId,
                                 user.getUserId());
                 return ResponseEntity.ok(response);
         }
 
-        @PatchMapping("/{id}/completed")
+        @PatchMapping("/{exerciseId}/completed")
         public ResponseEntity<SessionExerciseResponse> markAsCompleted(
                         @PathVariable("planId") Integer planId,
                         @PathVariable("sessionId") Integer sessionId,
-                        @PathVariable("id") Integer id,
+                        @PathVariable("exerciseId") Integer exerciseId,
                         @RequestParam("completed") Boolean completed,
                         @AuthenticationPrincipal UserPrincipal user) {
-                SessionExerciseResponse response = sessionExerciseService.markAsCompleted(id, sessionId, planId,
+                SessionExerciseResponse response = sessionExerciseService.markAsCompleted(exerciseId, sessionId, planId,
                                 user.getUserId(), completed);
                 return ResponseEntity.ok(response);
         }
 
-        @DeleteMapping("/{id}")
+        @DeleteMapping("/{exerciseId}")
         public ResponseEntity<String> deleteSessionExercise(
                         @PathVariable("planId") Integer planId,
                         @PathVariable("sessionId") Integer sessionId,
-                        @PathVariable("id") Integer id,
+                        @PathVariable("exerciseId") Integer exerciseId,
                         @AuthenticationPrincipal UserPrincipal user) {
-                sessionExerciseService.deleteSessionExercise(id, sessionId, planId, user.getUserId());
+                sessionExerciseService.deleteSessionExercise(exerciseId, sessionId, planId, user.getUserId());
                 return ResponseEntity.ok("Session exercise deleted!");
         }
 

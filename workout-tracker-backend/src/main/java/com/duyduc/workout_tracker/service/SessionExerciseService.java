@@ -12,15 +12,15 @@ public interface SessionExerciseService {
 
     List<SessionExerciseResponse> getSessionExercises(Integer sessionId, Integer planId, Integer userId);
 
-    SessionExerciseResponse getSessionExerciseById(Integer id, Integer sessionId, Integer planId, Integer userId);
+    SessionExerciseResponse getSessionExerciseById(Integer exerciseId, Integer sessionId, Integer planId, Integer userId);
 
-    SessionExerciseResponse updateSessionExercise(SessionExerciseRequest request, Integer id, Integer sessionId,
-            Integer planId, Integer userId);
+    SessionExerciseResponse updateSessionExercise(SessionExerciseRequest request, Integer exerciseId, Integer sessionId,
+                                                  Integer planId, Integer userId);
 
-    SessionExerciseResponse markAsCompleted(Integer id, Integer sessionId, Integer planId, Integer userId,
-            Boolean completed);
+    SessionExerciseResponse markAsCompleted(Integer exerciseId, Integer sessionId, Integer planId, Integer userId,
+                                            Boolean completed);
 
-    void deleteSessionExercise(Integer id, Integer sessionId, Integer planId, Integer userId);
+    void deleteSessionExercise(Integer exerciseId, Integer sessionId, Integer planId, Integer userId);
 
     void deleteAllSessionExercises(Integer sessionId, Integer planId, Integer userId);
 }

@@ -8,15 +8,14 @@ import java.util.List;
 public interface WorkoutPlanService {
     WorkoutPlanResponse createWorkoutPlan(WorkoutPlanRequest request, Integer userId);
 
-    WorkoutPlanResponse copyWorkoutPlan(Integer id, Integer userId);
+    WorkoutPlanResponse copyWorkoutPlan(Integer planId, Integer userId);
 
     List<WorkoutPlanResponse> getWorkoutPlans(Integer userId);
 
-    WorkoutPlanResponse getWorkoutPlanById(Integer id, Integer userId);
+    WorkoutPlanResponse getWorkoutPlanById(Integer planId, Integer userId);
 
-    WorkoutPlanResponse updateWorkoutPlanById(WorkoutPlanRequest request, Integer id, Integer userId);
+    WorkoutPlanResponse updateWorkoutPlanById(WorkoutPlanRequest request, Integer planId, Integer userId);
 
-    void deleteWorkoutPlanById(Integer id, Integer userId);
+    void deleteWorkoutPlanById(Integer planId, Integer userId);
 
-    void deleteAllWorkoutPlans(Integer userId);
 }

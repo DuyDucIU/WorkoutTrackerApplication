@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
 
         userRepo.save(user);
 
-        return "User registered sucessfully!!";
+        return "User registered successfully!!";
     }
 
     @Override
@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
                     .setAuthentication(authenticatedUser);
 
             User user = userRepo.findByUsername(loginRequest.getUsername())
-                    .orElseThrow(); // giờ cái này gần như không bao giờ fail
+                    .orElseThrow();
 
             String token = jwtUtils.generateToken(authenticatedUser, user.getId());
             UserResponse userResponse = UserResponse.builder()

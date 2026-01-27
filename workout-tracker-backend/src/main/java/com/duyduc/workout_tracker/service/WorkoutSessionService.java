@@ -13,15 +13,15 @@ public interface WorkoutSessionService {
 
         List<WorkoutSessionResponse> getWorkoutSessions(Integer workoutPlanId, Integer userId);
 
-        WorkoutSessionResponse getWorkoutSessionById(Integer id, Integer workoutPlanId, Integer userId);
+        WorkoutSessionResponse getWorkoutSessionById(Integer sessionId, Integer workoutPlanId, Integer userId);
 
-        WorkoutSessionResponse updateWorkoutSession(WorkoutSessionRequest request, Integer id, Integer workoutPlanId,
-                        Integer userId);
+        WorkoutSessionResponse updateWorkoutSession(WorkoutSessionRequest request, Integer sessionId, Integer workoutPlanId,
+                                                    Integer userId);
 
-        WorkoutSessionResponse updateStatus(Integer id, Integer workoutPlanId, Integer userId,
-                        WorkoutSessionStatus status);
+        WorkoutSessionResponse updateStatus(Integer sessionId, Integer workoutPlanId, Integer userId,
+                                            WorkoutSessionStatus status);
 
-        void deleteWorkoutSession(Integer id, Integer workoutPlanId, Integer userId);
+        void deleteWorkoutSession(Integer sessionId, Integer workoutPlanId, Integer userId);
 
         void deleteAllWorkoutSessions(Integer workoutPlanId, Integer userId);
 }

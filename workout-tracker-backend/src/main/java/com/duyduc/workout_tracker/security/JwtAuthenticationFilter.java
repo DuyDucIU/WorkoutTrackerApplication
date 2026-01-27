@@ -1,11 +1,13 @@
 package com.duyduc.workout_tracker.security;
 
+import com.nimbusds.jwt.proc.BadJWTException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -23,14 +25,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String token = jwtUtils.getToken(request);
+        String token = jwtUtils.getTokenFromRequest(request);
 
         try {
             if (StringUtils.hasText(token) && jwtUtils.validateToken(token)) {
-                String username = jwtUtils.getUsername(token);
-                Integer userId = jwtUtils.getUserId(token);
+                String username = jwtUtils.getUsernameFromToken(token);
+                Integer userId = jwtUtils.getUserIdFromToken(token);
 
-                // Create UserPrincipal from JWT claims (no DB query)
+                // Create UserPrincipal from JWT claims
                 UserPrincipal userDetails = new UserPrincipal(userId, username, null);
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -42,12 +44,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-        } catch (Exception e) {
-            e.printStackTrace(); // Log the error to debug 401s
-            SecurityContextHolder.clearContext();
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        }
-
         filterChain.doFilter(request, response);
+
+        } catch (AuthenticationException e) {
+            SecurityContextHolder.clearContext();
+            throw e;
+        }
     }
 }

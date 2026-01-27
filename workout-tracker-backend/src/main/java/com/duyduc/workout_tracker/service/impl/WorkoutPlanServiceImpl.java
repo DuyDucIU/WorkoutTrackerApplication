@@ -32,13 +32,13 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
-        WorkoutPlan workoutPlan = WorkoutPlan.builder()
+        WorkoutPlan newWorkout = WorkoutPlan.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .user(user)
                 .build();
 
-        WorkoutPlan savedWorkout = workoutPlanRepo.save(workoutPlan);
+        WorkoutPlan savedWorkout = workoutPlanRepo.save(newWorkout);
 
         WorkoutPlanResponse response = workoutPlanMapper.toWorkoutPlanResponse(savedWorkout);
 
@@ -47,9 +47,9 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
     @Transactional
     @Override
-    public WorkoutPlanResponse copyWorkoutPlan(Integer id, Integer userId) {
-        WorkoutPlan oldPlan = workoutPlanRepo.findByIdAndUserId(id, userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Workout not found with id: " + id));
+    public WorkoutPlanResponse copyWorkoutPlan(Integer planId, Integer userId) {
+        WorkoutPlan oldPlan = workoutPlanRepo.findByIdAndUserId(planId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workout not found with planId: " + planId));
 
         WorkoutPlan newPlan = WorkoutPlan.builder()
                 .name(oldPlan.getName() + " (Copy)")
@@ -102,10 +102,10 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     }
 
     @Override
-    public WorkoutPlanResponse getWorkoutPlanById(Integer id, Integer userId) {
+    public WorkoutPlanResponse getWorkoutPlanById(Integer planId, Integer userId) {
 
-        WorkoutPlan workoutPlan = workoutPlanRepo.findByIdAndUserId(id, userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Workout not found with id: " + id));
+        WorkoutPlan workoutPlan = workoutPlanRepo.findByIdAndUserId(planId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workout not found with planId: " + planId));
 
         WorkoutPlanResponse response = workoutPlanMapper.toWorkoutPlanResponse(workoutPlan);
 
@@ -114,10 +114,10 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
     @Transactional
     @Override
-    public WorkoutPlanResponse updateWorkoutPlanById(WorkoutPlanRequest request, Integer id, Integer userId) {
+    public WorkoutPlanResponse updateWorkoutPlanById(WorkoutPlanRequest request, Integer planId, Integer userId) {
 
-        WorkoutPlan workoutPlan = workoutPlanRepo.findByIdAndUserId(id, userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Workout not found with id: " + id));
+        WorkoutPlan workoutPlan = workoutPlanRepo.findByIdAndUserId(planId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workout not found with planId: " + planId));
 
         if (request.getName() != null && !request.getName().isBlank())
             workoutPlan.setName(request.getName());
@@ -133,17 +133,11 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
     @Transactional
     @Override
-    public void deleteWorkoutPlanById(Integer id, Integer userId) {
+    public void deleteWorkoutPlanById(Integer planId, Integer userId) {
 
-        WorkoutPlan workoutPlan = workoutPlanRepo.findByIdAndUserId(id, userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Workout not found with id: " + id));
+        WorkoutPlan workoutPlan = workoutPlanRepo.findByIdAndUserId(planId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workout not found with planId: " + planId));
 
         workoutPlanRepo.delete(workoutPlan);
-    }
-
-    @Transactional
-    @Override
-    public void deleteAllWorkoutPlans(Integer userId) {
-        workoutPlanRepo.deleteByUserId(userId);
     }
 }

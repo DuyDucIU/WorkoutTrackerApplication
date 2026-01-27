@@ -38,42 +38,42 @@ public class WorkoutSessionController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{sessionId}")
     public ResponseEntity<WorkoutSessionResponse> getWorkoutSessionById(
             @PathVariable("planId") Integer planId,
-            @PathVariable("id") Integer id,
+            @PathVariable("sessionId") Integer sessionId,
             @AuthenticationPrincipal UserPrincipal user) {
-        WorkoutSessionResponse response = workoutSessionService.getWorkoutSessionById(id, planId, user.getUserId());
+        WorkoutSessionResponse response = workoutSessionService.getWorkoutSessionById(sessionId, planId, user.getUserId());
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{sessionId}")
     public ResponseEntity<WorkoutSessionResponse> updateWorkoutSession(
             @PathVariable("planId") Integer planId,
-            @PathVariable("id") Integer id,
+            @PathVariable("sessionId") Integer sessionId,
             @Valid @RequestBody WorkoutSessionRequest request,
             @AuthenticationPrincipal UserPrincipal user) {
-        WorkoutSessionResponse response = workoutSessionService.updateWorkoutSession(request, id, planId,
+        WorkoutSessionResponse response = workoutSessionService.updateWorkoutSession(request, sessionId, planId,
                 user.getUserId());
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{id}/status")
+    @PatchMapping("/{sessionId}/status")
     public ResponseEntity<WorkoutSessionResponse> updateStatus(
             @PathVariable("planId") Integer planId,
-            @PathVariable("id") Integer id,
+            @PathVariable("sessionId") Integer sessionId,
             @RequestParam("status") WorkoutSessionStatus status,
             @AuthenticationPrincipal UserPrincipal user) {
-        WorkoutSessionResponse response = workoutSessionService.updateStatus(id, planId, user.getUserId(), status);
+        WorkoutSessionResponse response = workoutSessionService.updateStatus(sessionId, planId, user.getUserId(), status);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{sessionId}")
     public ResponseEntity<String> deleteWorkoutSession(
             @PathVariable("planId") Integer planId,
-            @PathVariable("id") Integer id,
+            @PathVariable("sessionId") Integer sessionId,
             @AuthenticationPrincipal UserPrincipal user) {
-        workoutSessionService.deleteWorkoutSession(id, planId, user.getUserId());
+        workoutSessionService.deleteWorkoutSession(sessionId, planId, user.getUserId());
         return ResponseEntity.ok("Workout session deleted!");
     }
 

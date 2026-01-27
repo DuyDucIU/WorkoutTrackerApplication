@@ -28,11 +28,11 @@ public class WorkoutPlanController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping("/{id}/copy")
+    @PostMapping("/{planId}/copy")
     public ResponseEntity<WorkoutPlanResponse> copyWorkoutPlan(
-            @PathVariable("id") Integer id,
+            @PathVariable("planId") Integer planId,
             @AuthenticationPrincipal UserPrincipal user) {
-        WorkoutPlanResponse response = workoutPlanService.copyWorkoutPlan(id, user.getUserId());
+        WorkoutPlanResponse response = workoutPlanService.copyWorkoutPlan(planId, user.getUserId());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -43,35 +43,28 @@ public class WorkoutPlanController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{planId}")
     public ResponseEntity<WorkoutPlanResponse> getWorkoutPlanById(
-            @PathVariable("id") Integer id,
+            @PathVariable("planId") Integer planId,
             @AuthenticationPrincipal UserPrincipal user) {
-        WorkoutPlanResponse response = workoutPlanService.getWorkoutPlanById(id, user.getUserId());
+        WorkoutPlanResponse response = workoutPlanService.getWorkoutPlanById(planId, user.getUserId());
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{planId}")
     public ResponseEntity<WorkoutPlanResponse> updateWorkoutPlanById(
-            @PathVariable("id") Integer id,
+            @PathVariable("planId") Integer planId,
             @Valid @RequestBody WorkoutPlanRequest req,
             @AuthenticationPrincipal UserPrincipal user) {
-        WorkoutPlanResponse response = workoutPlanService.updateWorkoutPlanById(req, id, user.getUserId());
+        WorkoutPlanResponse response = workoutPlanService.updateWorkoutPlanById(req, planId, user.getUserId());
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{planId}")
     public ResponseEntity<String> deleteWorkoutPlanById(
-            @PathVariable("id") Integer id,
+            @PathVariable("planId") Integer planId,
             @AuthenticationPrincipal UserPrincipal user) {
-        workoutPlanService.deleteWorkoutPlanById(id, user.getUserId());
+        workoutPlanService.deleteWorkoutPlanById(planId, user.getUserId());
         return ResponseEntity.ok("Workout plan deleted !");
-    }
-
-    @DeleteMapping
-    public ResponseEntity<String> deleteAllWorkoutPlans(
-            @AuthenticationPrincipal UserPrincipal user) {
-        workoutPlanService.deleteAllWorkoutPlans(user.getUserId());
-        return ResponseEntity.ok("All workout plans deleted !");
     }
 }
