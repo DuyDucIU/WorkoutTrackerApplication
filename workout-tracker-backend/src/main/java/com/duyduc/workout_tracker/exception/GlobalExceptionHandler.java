@@ -78,6 +78,21 @@ public class GlobalExceptionHandler {
                 return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
+        @ExceptionHandler(BadCredentialsException.class)
+        public ResponseEntity<ErrorResponse> handleBadCredentialsException(
+                BadCredentialsException ex, HttpServletRequest request) {
+
+                ErrorResponse errorResponse = ErrorResponse.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.UNAUTHORIZED.value())
+                        .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                        .message("Invalid username or password")
+                        .path(request.getRequestURI())
+                        .build();
+
+                return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+        }
+
         @ExceptionHandler(AuthenticationException.class)
         public ResponseEntity<ErrorResponse> handleAuthenticationException(
                         AuthenticationException ex, HttpServletRequest request) {
